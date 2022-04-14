@@ -1,0 +1,88 @@
+menu "SI4432 Configuration"
+
+	config GPIO_RANGE_MAX
+		int
+		default 33 if IDF_TARGET_ESP32
+		default 46 if IDF_TARGET_ESP32S2
+		default 19 if IDF_TARGET_ESP32C3
+		default 48 if IDF_TARGET_ESP32S3
+
+	config MISO_GPIO
+		int "SI4432 MISO GPIO"
+		range 0 GPIO_RANGE_MAX
+		default 19 if IDF_TARGET_ESP32
+		default 33 if IDF_TARGET_ESP32S2
+		default 18 if IDF_TARGET_ESP32C3
+		help
+			Pin Number to be used as the MISO SPI signal.
+
+	config MOSI_GPIO
+		int "SI4432 MOSI GPIO"
+		range 0 GPIO_RANGE_MAX
+		default 23 if IDF_TARGET_ESP32
+		default 35 if IDF_TARGET_ESP32S2
+		default 19 if IDF_TARGET_ESP32C3
+		help
+			Pin Number to be used as the MOSI SPI signal.
+
+	config SCK_GPIO
+		int "SI4432 SCK GPIO"
+		range 0 GPIO_RANGE_MAX
+		default 18 if IDF_TARGET_ESP32
+		default 36 if IDF_TARGET_ESP32S2
+		default 10 if IDF_TARGET_ESP32C3
+		help
+			Pin Number to be used as the SCK SPI signal.
+
+	config SEL_GPIO
+		int "SI4432 SEL GPIO"
+		range 0 GPIO_RANGE_MAX
+		default 5  if IDF_TARGET_ESP32
+		default 34 if IDF_TARGET_ESP32S2
+		default 9  if IDF_TARGET_ESP32C3
+		help
+			Pin Number to be used as the SEL SPI signal.
+
+	config SDN_GPIO
+		int "SI4432 SDN GPIO"
+		range 0 GPIO_RANGE_MAX
+		default 15 if IDF_TARGET_ESP32
+		default 37 if IDF_TARGET_ESP32S2
+		default 8  if IDF_TARGET_ESP32C3
+		help
+			Pin Number to be used as the SDN signal.
+
+	config IRQ_GPIO
+		int "SI4432 IRQ GPIO"
+		range 0 GPIO_RANGE_MAX
+		default 16 if IDF_TARGET_ESP32
+		default 38 if IDF_TARGET_ESP32S2
+		default 7  if IDF_TARGET_ESP32C3
+		help
+			Pin Number to be used as the IRQ signal.
+
+	config SI4432_CHANNEL
+		int "SI4432 channel"
+		range 0 255
+		default 0
+		help
+			Both receiver and transmitter must operate on the same channel
+
+	choice
+		prompt "SI4432 Frequency"
+		default SI4432_FREQ_433
+		help
+				Select ISM band frequency
+
+		config SI4432_FREQ_433
+				bool "433 MHz" 
+		config SI4432_FREQ_470
+				bool "470 MHz" 
+		config SI4432_FREQ_868
+				bool "868 MHz" 
+		config SI4432_FREQ_915
+				bool "915 MHz" 
+	endchoice
+
+
+endmenu
