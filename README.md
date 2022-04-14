@@ -34,7 +34,7 @@ I used a raw ESP-C3-13 to verify that these pins could be used as SPI clocks.
 ![config-top](https://user-images.githubusercontent.com/6020549/163330706-44e26f06-c4a7-4cd0-aa5d-1c59db3d176d.jpg)
 ![config-app](https://user-images.githubusercontent.com/6020549/163330711-2db45e5d-34ae-40f5-bab7-2fef1e7af122.jpg)
 
-- Enable Ping-Pong
+- Enable Ping-Pong   
 Send data from tx to rx.   
 In the rx, the characters are converted and sent back.   
 
