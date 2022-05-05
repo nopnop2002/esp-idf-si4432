@@ -15,7 +15,7 @@ This is because this version supports ESP32-C3.
 ```Shell
 git clone https://github.com/nopnop2002/esp-idf-si4432
 cd esp-idf-si4432
-idf.py set-target {esp32/esp32s2/esp32c3}
+idf.py set-target {esp32/esp32s2/esp32s3/esp32c3}
 idf.py menuconfig
 idf.py flash
 ```
@@ -45,14 +45,14 @@ TX waits for a response from RX.
 
 # Wirering
 
-|SI4432||ESP32|ESP32-S2|ESP32-C3|
+|SI4432||ESP32|ESP32-S2/S3|ESP32-C3|
 |:-:|:-:|:-:|:-:|:-:|
-|MISO|--|GPIO19|GPIO33|GPIO18|
-|MOSI|--|GPIO23|GPIO35|GPIO19|
+|MISO|--|GPIO19|GPIO37|GPIO18|
 |SCK|--|GPIO18|GPIO36|GPIO10|
-|SEL|--|GPIO5|GPIO34|GPIO9|
-|SDN|--|GPIO15|GPIO37|GPIO8|
-|IRQ|--|GPIO16|GPIO38|GPIO7|
+|MOSI|--|GPIO23|GPIO35|GPIO19|
+|SEL|--|GPIO5|GPIO34|GPIO7|
+|SDN|--|GPIO15|GPIO40|GPIO8|
+|IRQ|--|GPIO16|GPIO41|GPIO9|
 |GND|--|GND|GND|GND|
 |VCC|--|3.3V|3.3V|3.3V|
 
