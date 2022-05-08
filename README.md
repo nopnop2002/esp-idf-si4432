@@ -58,3 +58,25 @@ TX waits for a response from RX.
 
 __You can change it to any pin using menuconfig.__   
 
+
+# Comparison of nRF905, cc1101 and si4432
+||nRF905|cc1101|si4432|
+|:-:|:-:|:-:|:-:|
+|Manufacturer|Nordic Semiconductor|Texas Instrument|Silicon Labs|
+|Frequency|433/868/915MHz|315/433/868/915MHz|315/433/868/915MHz|
+|Maximum Payload|32Byte|64Byte|64Byte|
+|FiFo for reception|32Byte*1|64Byte*1|64Byte*1|
+|FiFo for transmission|32Byte*1|64Byte*1|64Byte*1|
+|CRC Length|8/16bits|16bits|8/16bits|
+|Acknowledgement Payload|No|No|No|
+|Modulation format|GFSK|2-FSK/4-FSK/GFSK/ASK/OOK/MSK|FSK/GFSK/OOK|
+
+
+- GFSK  : Gaussian shaped Frequency Shift Keying
+- FSK   : Frequency Shift Keying
+- 2-FSK : Binary Frequency Shift Keying
+- 4-FSK : Quaternary Frequency Shift Keying
+- ASK   : Amplitude Shift Keying
+- OSK   : On-Off Keying
+- MSI   : Minimum Shift Keying
+
