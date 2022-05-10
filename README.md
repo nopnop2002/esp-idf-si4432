@@ -51,7 +51,6 @@ It was called HSPI_HOST / VSPI_HOST, but it is not defined in SoCs other than ES
 Send data from TX to RX.   
 In the RX, the characters are converted and sent back to TX.   
 TX waits for a response from RX.   
-![Ping-Pong](https://user-images.githubusercontent.com/6020549/163336025-25b18572-5dde-49e0-ada3-302f3a8c5eb8.jpg)
 
 
 # Wirering
