@@ -67,6 +67,21 @@ menu "SI4432 Configuration"
 		help
 			Pin Number to be used as the IRQ signal.
 
+	choice SPI_HOST
+		prompt "SPI peripheral that controls this bus"
+		default SPI2_HOST
+		help
+			Select SPI peripheral that controls this bus.
+		config SPI2_HOST
+			bool "SPI2_HOST"
+			help
+				Use SPI2_HOST. This is also called HSPI_HOST.
+		config SPI3_HOST
+			bool "SPI3_HOST"
+			help
+				USE SPI3_HOST. This is also called VSPI_HOST
+	endchoice
+
 	config SI4432_CHANNEL
 		int "SI4432 channel"
 		range 0 255

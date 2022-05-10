@@ -29,12 +29,25 @@ I used a raw ESP-C3-13 to verify that these pins could be used as SPI clocks.
 # Configuration for Transceiver   
 
 ![config-si4432-1](https://user-images.githubusercontent.com/6020549/163330599-b5df4472-3e60-43c8-8507-5ba3fa829dd0.jpg)
-![config-si4432-2](https://user-images.githubusercontent.com/6020549/163330613-5900263b-2d6a-4092-a9b7-dd3d29c11632.jpg)
+![config-si4432-2](https://user-images.githubusercontent.com/6020549/167548307-9a24477b-b598-4e05-affc-e384bc8fda3c.jpg)
 
 # Configuration for Application   
 
 ![config-top](https://user-images.githubusercontent.com/6020549/163330706-44e26f06-c4a7-4cd0-aa5d-1c59db3d176d.jpg)
 ![config-app](https://user-images.githubusercontent.com/6020549/163330711-2db45e5d-34ae-40f5-bab7-2fef1e7af122.jpg)
+
+
+# SPI BUS selection   
+![config-si4432-3](https://user-images.githubusercontent.com/6020549/167548340-f363c727-fef5-4dfe-954f-fc2ceb99627c.jpg)
+
+The ESP32 series has three SPI BUSs.   
+SPI1_HOST is used for communication with Flash memory.   
+You can use SPI2_HOST and SPI3_HOST freely.   
+When you use SDSPI(SD Card via SPI), SDSPI uses SPI2_HOST BUS.   
+When using this module at the same time as SDSPI or other SPI device using SPI2_HOST, it needs to be changed to SPI3_HOST.   
+When you don't use SDSPI, both SPI2_HOST and SPI3_HOST will work.   
+It was called HSPI_HOST / VSPI_HOST, but it is not defined in SoCs other than ESP32.   
+
 
 - Enable Ping-Pong   
 Send data from TX to RX.   
@@ -57,6 +70,12 @@ TX waits for a response from RX.
 |VCC|--|3.3V|3.3V|3.3V|
 
 __You can change it to any pin using menuconfig.__   
+
+# Screen Shot
+
+![ScrrenShot-1](https://user-images.githubusercontent.com/6020549/167547945-56c0038f-38ee-4801-baef-0830fc4382d4.jpg)
+![ScrrenShot-2](https://user-images.githubusercontent.com/6020549/167547876-65e1c3c0-a352-4949-b2ed-96819a0e8dfc.jpg)
+
 
 
 # Comparison of nRF905, cc1101 and si4432
