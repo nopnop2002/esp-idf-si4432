@@ -31,12 +31,6 @@ I used a raw ESP-C3-13 to verify that these pins could be used as SPI clocks.
 ![config-si4432-1](https://user-images.githubusercontent.com/6020549/163330599-b5df4472-3e60-43c8-8507-5ba3fa829dd0.jpg)
 ![config-si4432-2](https://user-images.githubusercontent.com/6020549/167548307-9a24477b-b598-4e05-affc-e384bc8fda3c.jpg)
 
-# Configuration for Application   
-
-![config-top](https://user-images.githubusercontent.com/6020549/163330706-44e26f06-c4a7-4cd0-aa5d-1c59db3d176d.jpg)
-![config-app](https://user-images.githubusercontent.com/6020549/163330711-2db45e5d-34ae-40f5-bab7-2fef1e7af122.jpg)
-
-
 # SPI BUS selection   
 ![config-si4432-3](https://user-images.githubusercontent.com/6020549/167548340-f363c727-fef5-4dfe-954f-fc2ceb99627c.jpg)
 
@@ -48,6 +42,10 @@ When using this module at the same time as SDSPI or other SPI device using SPI2_
 When you don't use SDSPI, both SPI2_HOST and SPI3_HOST will work.   
 It was called HSPI_HOST / VSPI_HOST, but it is not defined in SoCs other than ESP32.   
 
+# Configuration for Application   
+
+![config-top](https://user-images.githubusercontent.com/6020549/163330706-44e26f06-c4a7-4cd0-aa5d-1c59db3d176d.jpg)
+![config-app](https://user-images.githubusercontent.com/6020549/163330711-2db45e5d-34ae-40f5-bab7-2fef1e7af122.jpg)
 
 - Enable Ping-Pong   
 Send data from TX to RX.   
