@@ -18,6 +18,7 @@
 #if CONFIG_TRANSMITTER
 void tx_task(void *pvParameter)
 {
+	ESP_LOGI(pcTaskGetName(0), "Start");
 	uint8_t txBuf[64];
 
 	while(1) {
@@ -90,6 +91,7 @@ void tx_task(void *pvParameter)
 #if CONFIG_RECEIVER
 void rx_task(void *pvParameter)
 {
+	ESP_LOGI(pcTaskGetName(0), "Start");
 	startListening();
 	uint8_t rxBuf[64];
 	uint8_t rxLen;
@@ -137,7 +139,7 @@ void rx_task(void *pvParameter)
 			//printf("No packet this cycle\n");
 		} // endif
 
-	vTaskDelay(1);
+		vTaskDelay(1);
 	} // end while
 
 	// never reach here
@@ -147,10 +149,7 @@ void rx_task(void *pvParameter)
 
 void app_main()
 {
-	ESP_LOGI(TAG, "CONFIG_SEL_GPIO=%d", CONFIG_SEL_GPIO);
-	ESP_LOGI(TAG, "CONFIG_SDN_GPIO=%d", CONFIG_SDN_GPIO);
-	ESP_LOGI(TAG, "CONFIG_IRQ_GPIO=%d", CONFIG_IRQ_GPIO);
-	bool ret = init(CONFIG_SEL_GPIO, CONFIG_SDN_GPIO, CONFIG_IRQ_GPIO);
+	bool ret = init();
 	if (ret == false) {
 		ESP_LOGE(TAG, "SI4432 not installed");
 		while(1) { vTaskDelay(1); }
@@ -168,7 +167,6 @@ void app_main()
 #endif
 	ESP_LOGW(TAG, "Set frequency to %luMHz", freq);
 	setFrequency(freq);
-	//setFrequency(433);
 	setChannel(CONFIG_SI4432_CHANNEL);
 	setBaudRate(70);
 	//readAll();

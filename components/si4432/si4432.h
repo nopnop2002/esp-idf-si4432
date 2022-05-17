@@ -16,7 +16,7 @@
 #ifndef si4432_H_
 #define si4432_H_
 
-#include <driver/spi_master.h>
+//#include <driver/spi_master.h>
 
 #define byte uint8_t
 #define Registers uint8_t
@@ -36,7 +36,7 @@
 	void setFrequency(unsigned long baseFrequency); // sets the freq. call before boot
 	void setChannel(byte channel); // sets the channel. call before switching to tx or rx mode
 	void setBaudRate(uint16_t kbps); // sets the  bps. call before switching to tx or rx mode - min:1, max: 256
-	bool init(uint8_t csPin, uint8_t sdnPin, uint8_t InterruptPin);  // when a InterruptPin is given, interrupts are checked with this pin - rather than SPI polling
+	bool init();
 	void setCommsSignature(uint16_t signature); // used to 'sign' packets with a predetermined signature - call before boot
 
 	bool sendPacket(uint8_t length, const byte* data); // switches to Tx mode and sends the package
@@ -64,14 +64,6 @@
 	enum AntennaMode {
 		RXMode = 0x04, TXMode = 0x08, Ready = 0x01, TuneMode = 0x02
 	};
-
-	uint8_t _csPin, _sdnPin, _intPin;
-
-	uint64_t _freqCarrier;
-	uint8_t _freqChannel;
-	uint16_t _kbps;
-	uint16_t _packageSign;
-	spi_device_handle_t _handle;
 
 	void boot(); // sets SPI and pins ready and boot the radio
 

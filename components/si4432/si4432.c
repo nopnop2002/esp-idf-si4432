@@ -20,6 +20,8 @@
 #define HOST_ID SPI3_HOST
 #endif
 
+static spi_device_handle_t _handle;
+
 #define MAX_TRANSMIT_TIMEOUT 200
 // #define DEBUG
 
@@ -27,14 +29,49 @@
 const uint16_t IFFilterTable[][2] = { { 322, 0x26 }, { 3355, 0x88 }, { 3618, 0x89 }, { 4202, 0x8A }, { 4684, 0x8B }, {
 		5188, 0x8C }, { 5770, 0x8D }, { 6207, 0x8E } };
 
-unsigned long millis(void)
+static uint64_t _freqCarrier;
+static uint8_t _freqChannel;
+static uint16_t _kbps;
+static uint16_t _packageSign;
+
+#define delayMicroseconds(microsec) esp_rom_delay_us(microsec)
+#define delay(millsec) esp_rom_delay_us(millsec*1000)
+#define millis() xTaskGetTickCount()*portTICK_PERIOD_MS
+
+void spi_init()
 {
-	TickType_t nowTick = xTaskGetTickCount();
-	unsigned long millSec = nowTick * portTICK_PERIOD_MS;
-	return millSec;
+	gpio_reset_pin(CONFIG_SEL_GPIO);
+	gpio_set_direction(CONFIG_SEL_GPIO, GPIO_MODE_OUTPUT);
+	gpio_set_level(CONFIG_SEL_GPIO, 1);
+
+	spi_bus_config_t buscfg = {
+		.sclk_io_num = CONFIG_SCK_GPIO, // set SPI CLK pin
+		.mosi_io_num = CONFIG_MOSI_GPIO, // set SPI MOSI pin
+		.miso_io_num = CONFIG_MISO_GPIO, // set SPI MISO pin
+		.quadwp_io_num = -1,
+		.quadhd_io_num = -1
+	};
+
+	esp_err_t ret;
+	ret = spi_bus_initialize( HOST_ID, &buscfg, SPI_DMA_CH_AUTO );
+	ESP_LOGI(TAG, "spi_bus_initialize=%d",ret);
+	assert(ret==ESP_OK);
+
+	// Hardware CS control don't work.
+	spi_device_interface_config_t devcfg = {
+		.clock_speed_hz = 5000000, // SPI clock is 5 MHz!
+		.queue_size = 7,
+		.mode = 0, // SPI mode 0
+		.spics_io_num = -1, // we will use manual CS control
+		.flags = SPI_DEVICE_NO_DUMMY
+	};
+
+	ret = spi_bus_add_device( HOST_ID, &devcfg, &_handle);
+	ESP_LOGI(TAG, "spi_bus_add_device=%d",ret);
+	assert(ret==ESP_OK);
 }
 
-bool spi_write_byte(uint8_t* Dataout, size_t DataLength )
+bool spi_write_byte(uint8_t* Dataout, size_t DataLength)
 {
 	spi_transaction_t SPITransaction;
 
@@ -49,7 +86,7 @@ bool spi_write_byte(uint8_t* Dataout, size_t DataLength )
 	return true;
 }
 
-bool spi_read_byte(uint8_t* Datain, uint8_t* Dataout, size_t DataLength )
+bool spi_read_byte(uint8_t* Datain, uint8_t* Dataout, size_t DataLength)
 {
 	spi_transaction_t SPITransaction;
 
@@ -72,15 +109,6 @@ uint8_t spi_transfer(uint8_t address) {
 	spi_read_byte(datain, dataout, 1 );
 	return datain[0];
 }
-
-
-#if 0
-Si4432(uint8_t csPin, uint8_t sdnPin, uint8_t InterruptPin) :
-		_csPin(csPin), _sdnPin(sdnPin), _intPin(InterruptPin), _freqCarrier(433000000), _freqChannel(0), _kbps(100), _packageSign(
-				0xDEAD) { // default is 450 mhz
-
-}
-#endif
 
 void setFrequency(unsigned long baseFrequencyMhz) {
 
@@ -116,61 +144,27 @@ void setCommsSignature(uint16_t signature) {
 	ChangeRegister(REG_CHECK_HEADER2, (_packageSign & 0xFF)); // header (signature) byte 2 val for receive checks
 }
 
-bool init(uint8_t csPin, uint8_t sdnPin, uint8_t InterruptPin) {
-	_csPin = csPin;
-	_sdnPin = sdnPin;
-	_intPin = InterruptPin;
+bool init() {
+	ESP_LOGI(TAG, "CONFIG_SEL_GPIO=%d", CONFIG_SEL_GPIO);
+	ESP_LOGI(TAG, "CONFIG_SDN_GPIO=%d", CONFIG_SDN_GPIO);
+	ESP_LOGI(TAG, "CONFIG_IRQ_GPIO=%d", CONFIG_IRQ_GPIO);
+
+	//_csPin = CONFIG_SEL_GPIO;
+	//_sdnPin = CONFIG_SDN_GPIO;
+	//_intPin = CONFIG_IRQ_GPIO;
 	_freqCarrier = 433000000;
 	_freqChannel = 0;
 	_kbps = 100;
 	_packageSign = 0xDEAD;
 
-	gpio_reset_pin(_intPin);
-	gpio_set_direction(_intPin, GPIO_MODE_INPUT);
-	//pinMode(_intPin, INPUT);
+	gpio_reset_pin(CONFIG_IRQ_GPIO);
+	gpio_set_direction(CONFIG_IRQ_GPIO, GPIO_MODE_INPUT);
 
-	gpio_reset_pin(_sdnPin);
-	gpio_set_direction(_sdnPin, GPIO_MODE_OUTPUT);
-	//pinMode(_sdnPin, OUTPUT);
+	gpio_reset_pin(CONFIG_SDN_GPIO);
+	gpio_set_direction(CONFIG_SDN_GPIO, GPIO_MODE_OUTPUT);
 	turnOff();
 
-	gpio_reset_pin(_csPin);
-	gpio_set_direction(_csPin, GPIO_MODE_OUTPUT);
-	//pinMode(_csPin, OUTPUT);
-	gpio_set_level(_csPin, 1);
-	//digitalWrite(_csPin, HIGH); // set pin high, so chip would know we don't use it. - well, it's turned off anyway but...
-
-	spi_bus_config_t buscfg = {
-		.sclk_io_num = CONFIG_SCK_GPIO, // set SPI CLK pin
-		.mosi_io_num = CONFIG_MOSI_GPIO, // set SPI MOSI pin
-		.miso_io_num = CONFIG_MISO_GPIO, // set SPI MISO pin
-		.quadwp_io_num = -1,
-		.quadhd_io_num = -1
-	};
-
-	esp_err_t ret;
-	ret = spi_bus_initialize( HOST_ID, &buscfg, SPI_DMA_CH_AUTO );
-	ESP_LOGI(TAG, "spi_bus_initialize=%d",ret);
-	assert(ret==ESP_OK);
-
-	// Hardware CS control don't work.
-	spi_device_interface_config_t devcfg = {
-		.clock_speed_hz = 5000000, // SPI clock is 5 MHz!
-		.queue_size = 7,
-		.mode = 0, // SPI mode 0
-		.spics_io_num = -1, // we will use manual CS control
-		.flags = SPI_DEVICE_NO_DUMMY
-	};
-
-	ret = spi_bus_add_device( HOST_ID, &devcfg, &_handle);
-	ESP_LOGI(TAG, "spi_bus_add_device=%d",ret);
-	assert(ret==ESP_OK);
-	//SPI.begin();
-	//remove regacy mode
-	//SPI.setBitOrder(MSBFIRST);
-	//SPI.setClockDivider(SPI_CLOCK_DIV16); // 16/ 2 = 8 MHZ. Max. is 10 MHZ, so we're cool.
-	//SPI.setDataMode(SPI_MODE0);
-
+	spi_init();
 	ESP_LOGI(TAG, "SPI is initialized now.");
 
 	hardReset();
@@ -240,13 +234,8 @@ bool sendPacket(uint8_t length, const byte* data) {
  
 	while (millis() - enterMillis < MAX_TRANSMIT_TIMEOUT) {
 
-#if 0
-		if ((_intPin != 0) && (digitalRead(_intPin) != 0)) {
-			continue;
-		}
-#endif
-
-		if ((_intPin != 0) && (gpio_get_level(_intPin) != 0)) {
+		//if ((CONFIG_IRQ_GPIO != 0) && (gpio_get_level(CONFIG_IRQ_GPIO) != 0)) {
+		if (gpio_get_level(CONFIG_IRQ_GPIO) != 0) {
 			vTaskDelay(1);
 			continue;
 		}
@@ -257,8 +246,8 @@ bool sendPacket(uint8_t length, const byte* data) {
 		
 		//if (intStatus & 0x04) { // Packet Sent Interrupt
 		if ( (intStatus & 0x04) == 0x04 || (intStatus & 0x20) == 0x20) { // TX FIFO Almost Empty.
-			//switchMode(Ready | TuneMode);
-			softReset(); // nop
+			switchMode(Ready | TuneMode);
+			//softReset(); // nop
 			return true;
 		} // endif
 		vTaskDelay(1);
@@ -297,27 +286,21 @@ void setChannel(byte channel) {
 
 void switchMode(byte mode) {
 	ESP_LOGD(TAG,"switchMode mode=0x%x", mode);
-	ChangeRegister(REG_STATE, mode); // receive mode
-#ifdef DEBUG
-	byte val = ReadRegister(REG_DEV_STATUS);
-	if (val == 0 || val == 0xFF) {
-		ESP_LOGI(TAG, "val=0x%x", val);
-		ESP_LOGI(TAG, " -- WHAT THE HELL!!");
-	}
-#endif
+	ChangeRegister(REG_STATE, mode);
 }
 
 void ChangeRegister(Registers reg, byte value) {
 	BurstWrite(reg, &value, 1);
 
-#ifdef DEBUG
+	// reg = 0x07 and value = 0x80 is Software Register Reset Bit.
+	// This bit will be automatically cleared.
+	if (reg == 0x07 && value == 0x80) return;
 	byte _value;
 	BurstRead(reg, &_value, 1);
 	if (value != _value) {
-		ESP_LOGI(TAG, "ChangeRegister Fail");
-		ESP_LOGI(TAG,"reg=0x%x value=0x%x", reg, value);
+		ESP_LOGE(TAG, "ChangeRegister Fail");
+		ESP_LOGE(TAG,"reg=0x%x value=0x%x", reg, value);
 	}
-#endif
 }
 
 void setBaudRate(uint16_t kbps) {
@@ -390,9 +373,7 @@ void BurstWrite(Registers startReg, const byte value[], uint8_t length) {
 
 	byte regVal = (byte) startReg | 0x80; // set MSB
 
-	gpio_set_level(_csPin, 0);
-	//digitalWrite(_csPin, LOW);
-	//SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
+	gpio_set_level(CONFIG_SEL_GPIO, 0);
 	spi_transfer(regVal);
 
 	for (byte i = 0; i < length; ++i) {
@@ -400,18 +381,14 @@ void BurstWrite(Registers startReg, const byte value[], uint8_t length) {
 		spi_transfer(value[i]);
 	}
 
-	gpio_set_level(_csPin, 1);
-	//digitalWrite(_csPin, HIGH);
-	//SPI.endTransaction();
+	gpio_set_level(CONFIG_SEL_GPIO, 1);
 }
 
 void BurstRead(Registers startReg, byte value[], uint8_t length) {
 
 	byte regVal = (byte) startReg & 0x7F; // clear MSB
 
-	gpio_set_level(_csPin, 0);
-	//digitalWrite(_csPin, LOW);
-	//SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
+	gpio_set_level(CONFIG_SEL_GPIO, 0);
 	spi_transfer(regVal);
 
 	for (byte i = 0; i < length; ++i) {
@@ -419,9 +396,7 @@ void BurstRead(Registers startReg, byte value[], uint8_t length) {
 		ESP_LOGD(TAG,"Reading: %x | %x", (regVal != 0x7F ? (regVal + i) & 0x7F : 0x7F), value[i]);
 	}
 
-	gpio_set_level(_csPin, 1);
-	//digitalWrite(_csPin, HIGH);
-	//SPI.endTransaction();
+	gpio_set_level(CONFIG_SEL_GPIO, 1);
 }
 
 void readAll() {
@@ -498,17 +473,10 @@ void startListening() {
 
 bool isPacketReceived() {
 
-#if 0
-	if ((_intPin != 0) && (digitalRead(_intPin) != 0)) {
+	//if ((CONFIG_IRQ_GPIO != 0) && (gpio_get_level(CONFIG_IRQ_GPIO) != 0)) {
+	if (gpio_get_level(CONFIG_IRQ_GPIO) != 0) {
 		return false; // if no interrupt occurred, no packet received is assumed (since startListening will be called prior, this assumption is enough)
 	}
-#endif
-
-#if 1
-	if ((_intPin != 0) && (gpio_get_level(_intPin) != 0)) {
-		return false; // if no interrupt occurred, no packet received is assumed (since startListening will be called prior, this assumption is enough)
-	}
-#endif
 
 	// check for package received status interrupt register
 	byte intStat = ReadRegister(REG_INT_STATUS1);
@@ -528,8 +496,6 @@ bool isPacketReceived() {
 		ESP_LOGI(TAG,"HEY!! HEY!! SYNC WORD detected -- 0x%x", intStat2);
 
 	}
-#else
-	ReadRegister(REG_INT_STATUS2);
 #endif
 
 	if (intStat & 0x02) { //interrupt occurred, check it && read the Interrupt Status1 register for 'valid packet'
@@ -550,13 +516,11 @@ bool isPacketReceived() {
 }
 
 void turnOn() {
-	gpio_set_level(_sdnPin, 0);
-	//digitalWrite(_sdnPin, LOW); // turn on the chip now
+	gpio_set_level(CONFIG_SDN_GPIO, 0);
 	vTaskDelay(1);
 }
 
 void turnOff() {
-	gpio_set_level(_sdnPin, 1);
-	//digitalWrite(_sdnPin, HIGH); // turn off the chip now
+	gpio_set_level(CONFIG_SDN_GPIO, 1);
 	vTaskDelay(1);
 }
