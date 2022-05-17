@@ -145,13 +145,10 @@ void setCommsSignature(uint16_t signature) {
 }
 
 bool init() {
-	ESP_LOGI(TAG, "CONFIG_SEL_GPIO=%d", CONFIG_SEL_GPIO);
-	ESP_LOGI(TAG, "CONFIG_SDN_GPIO=%d", CONFIG_SDN_GPIO);
-	ESP_LOGI(TAG, "CONFIG_IRQ_GPIO=%d", CONFIG_IRQ_GPIO);
+	ESP_LOGI(TAG, "CONFIG_SEL_GPIO=%d", CONFIG_SEL_GPIO); // SPI CS
+	ESP_LOGI(TAG, "CONFIG_SDN_GPIO=%d", CONFIG_SDN_GPIO); // Shutdown Input
+	ESP_LOGI(TAG, "CONFIG_IRQ_GPIO=%d", CONFIG_IRQ_GPIO); // IRQ Output
 
-	//_csPin = CONFIG_SEL_GPIO;
-	//_sdnPin = CONFIG_SDN_GPIO;
-	//_intPin = CONFIG_IRQ_GPIO;
 	_freqCarrier = 433000000;
 	_freqChannel = 0;
 	_kbps = 100;
