@@ -2,7 +2,14 @@
 
 #define RESPONCE 1
 
-Si4432 radio(10, 7, 2); // CS, SDN, IRQ
+// for UNO
+//Si4432 radio(10, 7, 2); // CS, SDN, IRQ
+
+// for MEGA
+//Si4432 radio(10, 7, 2); // CS, SDN, IRQ
+
+//for ESP8266
+Si4432 radio(15, 4, 5); // CS, SDN, IRQ
 
 void setup() {
   delay(1000);
@@ -21,7 +28,7 @@ void setup() {
 
 void loop() {
   byte txBuf[64];
-  sprintf(txBuf,"Hello World %lu", millis());
+  sprintf((char *)txBuf,"Hello World %lu", millis());
   byte txLen = strlen((char *)txBuf);
 
   bool sent = radio.sendPacket(txLen, txBuf);
