@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <inttypes.h>
 #include <string.h>
 #include <math.h>
 
@@ -130,7 +132,8 @@ void setFrequency(unsigned long baseFrequencyMhz) {
 		highBand = 1;
 	}
 
-	double fPart = (baseFrequencyMhz / (10 * (highBand + 1))) - 24;
+	//double fPart = (baseFrequencyMhz / (10 * (highBand + 1))) - 24;
+	double fPart = ((double)baseFrequencyMhz / (10 * (highBand + 1))) - 24;
 
 	uint8_t freqband = (uint8_t) fPart; // truncate the int
 
@@ -317,7 +320,8 @@ void setBaudRate(uint16_t kbps) {
 	_kbps = kbps;
 
 	byte freqDev = kbps <= 10 ? 15 : 150;		// 15khz / 150 khz
-	byte modulationValue = _kbps < 30 ? 0x4c : 0x0c;		// use FIFO Mode, GFSK, low baud mode on / off
+	//byte modulationValue = _kbps < 30 ? 0x4c : 0x0c;		// use FIFO Mode, GFSK, low baud mode on / off
+	byte modulationValue = _kbps < 30 ? 0x2c : 0x0c;		// use FIFO Mode, GFSK, low baud mode on / off
 
 	byte modulationVals[] = { modulationValue, 0x23, round((freqDev * 1000.0) / 625.0) }; // msb of the kpbs to 3rd bit of register
 	BurstWrite(REG_MODULATION_MODE1, modulationVals, 3); // 0x70
@@ -358,7 +362,7 @@ void setBaudRate(uint16_t kbps) {
 	ESP_LOGD(TAG,"dwn3_bypass value: 0x%x", dwn3_bypass);
 	ESP_LOGD(TAG,"ndec_exp value: 0x%x", ndec_exp);
 	ESP_LOGD(TAG,"rxOversampling value: 0x%x", rxOversampling);
-	ESP_LOGD(TAG,"ncOffset value: 0x%x", ncOffset);
+	ESP_LOGD(TAG,"ncOffset value: 0x%"PRIu32, ncOffset);
 	ESP_LOGD(TAG,"crGain value: 0x%x", crGain);
 	ESP_LOGD(TAG,"crMultiplier value: 0x%x", crMultiplier);
 

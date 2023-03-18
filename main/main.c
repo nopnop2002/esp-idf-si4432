@@ -22,7 +22,7 @@ void tx_task(void *pvParameter)
 	uint8_t txBuf[64];
 
 	while(1) {
-		sprintf((char *)txBuf,"Hello World %d", xTaskGetTickCount());
+		sprintf((char *)txBuf,"Hello World %"PRIu32, xTaskGetTickCount());
 		uint8_t txLen = strlen((char *)txBuf);
 
 		bool sent = sendPacket(txLen, txBuf);
@@ -40,7 +40,7 @@ void tx_task(void *pvParameter)
 					getPacketReceived(&rxLen, rxBuf);
 					TickType_t receiveTicks = xTaskGetTickCount();
 					TickType_t elaspedTicks = receiveTicks - startTicks;
-					printf("rxLen:%d elasped:%d\n", rxLen, elaspedTicks);
+					printf("rxLen:%d elasped:%"PRIu32"d\n", rxLen, elaspedTicks);
 
 					for (int i = 0; i < rxLen; ++i) {
 						printf("%x ", rxBuf[i]);
