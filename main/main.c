@@ -4,8 +4,8 @@
  */
 
 #include <stdio.h>
+#include <inttypes.h>
 #include <string.h>
-#include <ctype.h>
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -13,7 +13,7 @@
 
 #include "si4432.h"
 
-#define TAG "MAIN"
+static const char *TAG = "MAIN";
 
 #if CONFIG_TRANSMITTER
 void tx_task(void *pvParameter)

@@ -11,15 +11,16 @@ I refered [this](https://github.com/ADiea/si4432).
  Pinout is [here](http://www.dorji.com/docs/data/DRF4432F20.pdf).   
 
 # Software requirements
-ESP-IDF V4.4/V5.0.   
+ESP-IDF V4.4/V5.x.   
 ESP-IDF V5.0 is required when using ESP32-C2.   
+ESP-IDF V5.1 is required when using ESP32-C6.   
 
 # Installation
 
 ```Shell
 git clone https://github.com/nopnop2002/esp-idf-si4432
 cd esp-idf-si4432
-idf.py set-target {esp32/esp32s2/esp32s3/esp32c2/esp32c3}
+idf.py set-target {esp32/esp32s2/esp32s3/esp32c2/esp32c3/esp32c6}
 idf.py menuconfig
 idf.py flash
 ```
@@ -59,7 +60,7 @@ TX waits for a response from RX.
 
 # Wirering
 
-|SI4432||ESP32|ESP32-S2/S3|ESP32-C2/C3|
+|SI4432||ESP32|ESP32-S2/S3|ESP32-C2/C3/C6|
 |:-:|:-:|:-:|:-:|:-:|
 |MISO|--|GPIO19|GPIO37|GPIO4|
 |SCK|--|GPIO18|GPIO36|GPIO3|
