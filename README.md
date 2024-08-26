@@ -7,8 +7,8 @@ I refered [this](https://github.com/ADiea/si4432).
  ![SI4432-433MHz-2 54mm](https://user-images.githubusercontent.com/6020549/163330289-770357cd-5bb4-4030-9347-edd0da6f21d3.JPG)
 
 - 1.27mm pitch 433MHz   
+ Pinout is [here](http://www.dorji.com/docs/data/DRF4432F20.pdf)   
  ![SI4432-433MHz-1 27mm](https://user-images.githubusercontent.com/6020549/170854841-ab5318ae-7b31-4d11-98d9-719f48a49c36.JPG)
- Pinout is [here](http://www.dorji.com/docs/data/DRF4432F20.pdf).   
 
 # Software requirements
 ESP-IDF V4.4/V5.x.   
