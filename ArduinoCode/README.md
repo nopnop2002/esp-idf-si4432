@@ -20,7 +20,7 @@ In addition, the output current capacity of UNO-compatible devices is smaller th
 __So this module may not work normally when supplied from the on-board 3v3.__   
 
 (*2)    
-CC1101 is not 5V tolerant.   
+SI4432 is not 5V tolerant.   
 You need level shift from 5V to 3.3V.   
 I used [this](https://www.ti.com/lit/ds/symlink/txs0108e.pdf?ts=1647593549503) for a level shift.   
 
