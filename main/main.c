@@ -18,7 +18,7 @@ static const char *TAG = "MAIN";
 #if CONFIG_TRANSMITTER
 void tx_task(void *pvParameter)
 {
-	ESP_LOGI(pcTaskGetName(0), "Start");
+	ESP_LOGI(pcTaskGetName(NULL), "Start");
 	uint8_t txBuf[64];
 
 	while(1) {
@@ -91,7 +91,7 @@ void tx_task(void *pvParameter)
 #if CONFIG_RECEIVER
 void rx_task(void *pvParameter)
 {
-	ESP_LOGI(pcTaskGetName(0), "Start");
+	ESP_LOGI(pcTaskGetName(NULL), "Start");
 	startListening();
 	uint8_t rxBuf[64];
 	uint8_t rxLen;
