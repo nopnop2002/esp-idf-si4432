@@ -79,13 +79,6 @@ menu "SI4432 Configuration"
 				USE SPI3_HOST. This is also called VSPI_HOST
 	endchoice
 
-	config SI4432_CHANNEL
-		int "SI4432 channel"
-		range 0 255
-		default 0
-		help
-			Both receiver and transmitter must operate on the same channel
-
 	choice
 		prompt "SI4432 Frequency"
 		default SI4432_FREQ_433
@@ -102,5 +95,11 @@ menu "SI4432 Configuration"
 				bool "915 MHz" 
 	endchoice
 
+	config SI4432_CHANNEL
+		int "SI4432 channel"
+		range 0 255
+		default 0
+		help
+			Both receiver and transmitter must operate on the same channel
 
 endmenu

@@ -32,12 +32,11 @@ I used a raw ESP-C3-13 to verify that these pins could be used as SPI clocks.
 
 
 # Configuration for Transceiver   
-
-![config-si4432-1](https://user-images.githubusercontent.com/6020549/163330599-b5df4472-3e60-43c8-8507-5ba3fa829dd0.jpg)
-![config-si4432-2](https://user-images.githubusercontent.com/6020549/167548307-9a24477b-b598-4e05-affc-e384bc8fda3c.jpg)
+![Image](https://github.com/user-attachments/assets/f60383fc-c530-4e38-806b-a69a921044cf)
+![Image](https://github.com/user-attachments/assets/d4c85478-7c27-4a46-90b3-58e976c6a6d3)
 
 # SPI BUS selection   
-![config-si4432-3](https://user-images.githubusercontent.com/6020549/167548340-f363c727-fef5-4dfe-954f-fc2ceb99627c.jpg)
+![Image](https://github.com/user-attachments/assets/02d5047c-a397-4e38-8f67-256d2e41e6f0)
 
 The ESP32 series has three SPI BUSs.   
 SPI1_HOST is used for communication with Flash memory.   
@@ -47,8 +46,8 @@ When using this module at the same time as SDSPI or other SPI device using SPI2_
 When you don't use SDSPI, both SPI2_HOST and SPI3_HOST will work.   
 It was called HSPI_HOST / VSPI_HOST, but it is not defined in SoCs other than ESP32.   
 
-# Frequency and Channel to use
-![Image](https://github.com/user-attachments/assets/9327b7d4-020a-4d0b-a1f6-7f3d8a7bb6b5)
+# Frequency and Channel to use   
+![Image](https://github.com/user-attachments/assets/733ee4e1-6e0e-4298-8ea8-62bd8dc5b8e1)
 
 The frequency and channel used by the sender and receiver must match.   
 
