@@ -47,6 +47,12 @@ When using this module at the same time as SDSPI or other SPI device using SPI2_
 When you don't use SDSPI, both SPI2_HOST and SPI3_HOST will work.   
 It was called HSPI_HOST / VSPI_HOST, but it is not defined in SoCs other than ESP32.   
 
+# Frequency and Channel to use
+![Image](https://github.com/user-attachments/assets/9327b7d4-020a-4d0b-a1f6-7f3d8a7bb6b5)
+
+The frequency and channel used by the sender and receiver must match.   
+
+
 # Configuration for Application   
 
 ![config-top](https://user-images.githubusercontent.com/6020549/163330706-44e26f06-c4a7-4cd0-aa5d-1c59db3d176d.jpg)
