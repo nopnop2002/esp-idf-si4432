@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -167,6 +168,7 @@ void app_main()
 #endif
 	ESP_LOGW(TAG, "Set frequency to %luMHz", freq);
 	setFrequency(freq);
+	ESP_LOGW(TAG, "Set channel to %d", CONFIG_SI4432_CHANNEL);
 	setChannel(CONFIG_SI4432_CHANNEL);
 	setBaudRate(70);
 	//readAll();
@@ -178,4 +180,3 @@ void app_main()
 	xTaskCreate(&rx_task, "rx_task", 1024*4, NULL, 1, NULL);
 #endif
 }
-
