@@ -24,3 +24,25 @@ SI4432 is not 5V tolerant.
 You need level shift from 5V to 3.3V.   
 I used [this](https://www.ti.com/lit/ds/symlink/txs0108e.pdf?ts=1647593549503) for a level shift.   
 
+# Set Frequency & channel to use
+The frequency & channel used by the sender and receiver must match.   
+```
+#define FREQUENCY 433
+#define CHANNEL 0
+```
+
+# Send-only operation
+By default, si4432_tx will send and then wait for a response.   
+You can change this to send-only operation.   
+```
+#define RESPONCE 0
+```
+
+# Receive-only operation
+By default, si4432_rx will send a response after receiving.   
+You can change this to receive-only operation.   
+```
+#define RESPONCE 0
+```
+
+
