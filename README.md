@@ -19,7 +19,7 @@ ESP-IDF V5.1 is required when using ESP32-C6.
 
 ```Shell
 git clone https://github.com/nopnop2002/esp-idf-si4432
-cd esp-idf-si4432
+cd esp-idf-si4432/basic
 idf.py set-target {esp32/esp32s2/esp32s3/esp32c2/esp32c3/esp32c6}
 idf.py menuconfig
 idf.py flash
@@ -51,18 +51,6 @@ It was called HSPI_HOST / VSPI_HOST, but it is not defined in SoCs other than ES
 
 The frequency and channel used by the sender and receiver must match.   
 
-
-# Configuration for Application   
-
-![config-top](https://user-images.githubusercontent.com/6020549/163330706-44e26f06-c4a7-4cd0-aa5d-1c59db3d176d.jpg)
-![config-app](https://user-images.githubusercontent.com/6020549/163330711-2db45e5d-34ae-40f5-bab7-2fef1e7af122.jpg)
-
-- Enable Ping-Pong   
-Send data from TX to RX.   
-In the RX, the characters are converted and sent back to TX.   
-TX waits for a response from RX.   
-
-
 # Wirering
 
 |SI4432||ESP32|ESP32-S2/S3|ESP32-C2/C3/C6|
@@ -77,13 +65,6 @@ TX waits for a response from RX.
 |VCC|--|3.3V|3.3V|3.3V|
 
 __You can change it to any pin using menuconfig.__   
-
-# Screen Shot
-
-![ScrrenShot-1](https://user-images.githubusercontent.com/6020549/167547945-56c0038f-38ee-4801-baef-0830fc4382d4.jpg)
-![ScrrenShot-2](https://user-images.githubusercontent.com/6020549/167547876-65e1c3c0-a352-4949-b2ed-96819a0e8dfc.jpg)
-
-
 
 # Comparison of nRF905, cc1101 and si4432
 ||nRF905|cc1101|si4432|
