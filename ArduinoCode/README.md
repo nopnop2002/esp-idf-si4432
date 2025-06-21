@@ -31,18 +31,12 @@ The frequency & channel used by the sender and receiver must match.
 #define CHANNEL 0
 ```
 
-# Send-only operation
-By default, si4432_tx will send and then wait for a response.   
-You can change this to send-only operation.   
-```
-#define RESPONCE 0
-```
-
-# Receive-only operation
-By default, si4432_rx will send a response after receiving.   
-You can change this to receive-only operation.   
-```
-#define RESPONCE 0
-```
-
-
+# Application   
+- si4432_tx   
+	Send only.   
+- si4432_rx   
+	Receive only.   
+- si4432_primary   
+	Wait for a response after sending.   
+- si4432_secondary   
+	Send a response after receiving.   

@@ -53,7 +53,20 @@ void loop() {
     }
     Serial.println();
 
+    byte txLen = rxLen;
+    byte txBuf[64];
+    for (int i = 0; i < rxLen; ++i) {
+      char c = rxBuf[i];
+      if (islower(c)) {
+        txBuf[i] = toupper(c);
+      } else {
+        txBuf[i] = tolower(c);
+      }
+    }
+    
+    Serial.println("Sending response... ");
+    radio.sendPacket(txLen, txBuf);
+
     radio.startListening(); // restart the listening.
   }
-
 }
