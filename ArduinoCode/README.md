@@ -27,13 +27,11 @@ I used [this](https://www.ti.com/lit/ds/symlink/txs0108e.pdf?ts=1647593549503) f
 # Configuration
 
 - Radio frequency   
-	Specifies the frequency to be used.
 	```
 	#define FREQUENCY 433
 	```
 
 - Radio channel   
-	Specifies the channel to be used.
 	```
 	#define CHANNEL 0
 	```
