@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <string.h>
-#include <ctype.h>
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -93,6 +92,6 @@ void app_main()
 	xTaskCreate(&tx_task, "TX", 1024*4, NULL, 5, NULL);
 #endif
 #if CONFIG_RECEIVER
-	xTaskCreate(&rx_task, "RX", 1024*4, NULL, 1, NULL);
+	xTaskCreate(&rx_task, "RX", 1024*4, NULL, 5, NULL);
 #endif
 }

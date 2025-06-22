@@ -155,6 +155,6 @@ void app_main()
 	xTaskCreate(&tx_task, "PRIMARY", 1024*4, NULL, 5, NULL);
 #endif
 #if CONFIG_SECONDARY
-	xTaskCreate(&rx_task, "SECONDARY", 1024*4, NULL, 1, NULL);
+	xTaskCreate(&rx_task, "SECONDARY", 1024*4, NULL, 5, NULL);
 #endif
 }
