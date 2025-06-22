@@ -24,12 +24,19 @@ SI4432 is not 5V tolerant.
 You need level shift from 5V to 3.3V.   
 I used [this](https://www.ti.com/lit/ds/symlink/txs0108e.pdf?ts=1647593549503) for a level shift.   
 
-# Set Frequency & channel to use
-The frequency & channel used by the sender and receiver must match.   
-```
-#define FREQUENCY 433
-#define CHANNEL 0
-```
+# Configuration
+
+- Radio frequency   
+	Specifies the frequency to be used.
+	```
+	#define FREQUENCY 433
+	```
+
+- Radio channel   
+	Specifies the channel to be used.
+	```
+	#define CHANNEL 0
+	```
 
 # Application   
 - si4432_tx   
