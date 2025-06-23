@@ -6,7 +6,7 @@ In the secondary, the characters are converted and sent back.
 ```
 +-----------+           +-----------+             +-----------+           +-----------+
 |           |           |           |             |           |           |           |
-|  Primary  |===(SPI)==>|  SI4432   |---(Radio)-->|  SI4432   |===(SPI)==>| Secondary |
+|  Primary  |===(SPI)==>|  si4432   |---(Radio)-->|  si4432   |===(SPI)==>| Secondary |
 |   ESP32   |           |           |             |           |           |           |
 |           |           |           |             |           |           |           |
 |           |<==(SPI)===|           |<--(Radio)---|           |<==(SPI)===|           |
@@ -19,7 +19,7 @@ In the secondary, the characters are converted and sent back.
 ```
 +-----------+           +-----------+             +-----------+           +-----------+
 |           |           |           |             |           |           |           |
-|  Primary  |===(SPI)==>|  SI4432   |---(Radio)-->|  SI4432   |===(SPI)==>| Secondary |
+|  Primary  |===(SPI)==>|  si4432   |---(Radio)-->|  si4432   |===(SPI)==>| Secondary |
 |           |           |           |             |           |           |   ESP32   |
 |           |           |           |             |           |           |           |
 |           |<==(SPI)===|           |<--(Radio)---|           |<==(SPI)===|           |
