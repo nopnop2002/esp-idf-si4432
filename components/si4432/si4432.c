@@ -263,7 +263,7 @@ bool sendPacket(uint8_t length, const byte* data) {
 	} // end while
 
 	//timeout occurred.
-	ESP_LOGW(TAG, "Timeout in Transit -- ");
+	ESP_LOGW(__FUNCTION__, "Timeout in Transit -- ");
 #if 0
 	switchMode(Ready);
 
@@ -307,8 +307,8 @@ void ChangeRegister(Registers reg, byte value) {
 	byte _value;
 	BurstRead(reg, &_value, 1);
 	if (value != _value) {
-		ESP_LOGE(TAG, "ChangeRegister Fail");
-		ESP_LOGE(TAG,"reg=0x%x value=0x%x", reg, value);
+		ESP_LOGE(__FUNCTION__, "ChangeRegister Fail");
+		ESP_LOGE(__FUNCTION__, "reg=0x%x value=0x%x", reg, value);
 	}
 }
 
@@ -514,7 +514,7 @@ bool isPacketReceived() {
 		return true;
 	} else if (intStat & 0x01) { // packet crc error
 		switchMode(Ready); // get out of Rx mode till buffers are cleared
-		ESP_LOGW(TAG,"CRC Error in Packet detected!-- 0x%x", intStat);
+		ESP_LOGW(__FUNCTION__, "CRC Error in Packet detected!-- 0x%x", intStat);
 		clearRxFIFO();
 		switchMode(RXMode | Ready); // get back to work
 		return false;
