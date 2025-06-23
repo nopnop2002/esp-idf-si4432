@@ -66,6 +66,13 @@ The frequency and channel used by the sender and receiver must match.
 
 __You can change it to any pin using menuconfig.__   
 
+# Troubleshooting
+If you get this error, try to change the IRQ GPIO to another GPIO.
+```
+W (33939) sendPacket: Timeout in Transit --
+E (4789) TX: sendPacket Fail
+```
+
 # Comparison of nRF905, cc1101 and si4432
 ||nRF905|cc1101|si4432|
 |:-:|:-:|:-:|:-:|
