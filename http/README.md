@@ -22,7 +22,7 @@ This is si4432 and HTTP gateway application.
 
 ## WiFi Setting
 Set the information of your access point.   
-![config-wifi](https://github.com/nopnop2002/esp-idf-cc1101/assets/6020549/5f59f5a9-ca9e-488a-90bb-4929065e43d0)
+![Image](https://github.com/user-attachments/assets/5c0f3850-8699-414f-a130-df088db4e87c)
 
 ## Radioi Setting
 Set the wireless communication direction.   
@@ -41,7 +41,7 @@ You can use curl as HTTP Client.
             +-----------+           +-----------+           +-----------+
 ```
 
-![config-radio-1](https://github.com/nopnop2002/esp-idf-cc1101/assets/6020549/26f4bf6f-a0e5-4038-a617-b4fb83badc96)
+![Image](https://github.com/user-attachments/assets/be869b5e-4a8e-4310-bc93-ae7c24188351)
 
 Communicate with Arduino Environment.   
 Run this sketch.   
@@ -62,7 +62,7 @@ You can use nc(netcat) as HTTP Server.
             +-----------+           +-----------+           +-----------+
 ```
 
-![config-radio-2](https://github.com/nopnop2002/esp-idf-cc1101/assets/6020549/85cfe7eb-e148-49b6-a9d6-524c321c13d5)
+![Image](https://github.com/user-attachments/assets/80e4e4e5-5451-460f-823e-b0139f6d5bd0)
 
 
 Communicate with Arduino Environment.   
