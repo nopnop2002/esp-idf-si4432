@@ -183,7 +183,7 @@ bool init() {
 	byte syncWord2 = ReadRegister(REG_SYNC_WORD2);
 	byte syncWord1 = ReadRegister(REG_SYNC_WORD1);
 	byte syncWord0 = ReadRegister(REG_SYNC_WORD0);
-	ESP_LOGI(TAG,"syncWord3=%x, syncWord2=%x, syncWord1=%x, syncWord0=%x", syncWord3, syncWord2, syncWord1, syncWord0);
+	ESP_LOGI(TAG, "syncWord3=%x, syncWord2=%x, syncWord1=%x, syncWord0=%x", syncWord3, syncWord2, syncWord1, syncWord0);
 	
 	if (syncWord3 != 0x2D || syncWord2 != 0xD4) return false;
 	return true;
@@ -247,29 +247,20 @@ bool sendPacket(uint8_t length, const byte* data) {
 			continue;
 		}
 
-		byte intStatus = ReadRegister(REG_INT_STATUS1);
+		byte intStatus1 = ReadRegister(REG_INT_STATUS1);
 		//ReadRegister(REG_INT_STATUS2);
-		ESP_LOGD(TAG,"sendPacket REG_INT_STATUS1=0x%x", intStatus);
+		ESP_LOGD(__FUNCTION__, "REG_INT_STATUS1=0x%x", intStatus1);
 		
-		//if (intStatus & 0x04) { // Packet Sent Interrupt
-		if ( (intStatus & 0x04) == 0x04 || (intStatus & 0x20) == 0x20) { // TX FIFO Almost Empty.
-			switchMode(Ready | TuneMode);
-			//softReset(); // nop
+		if (intStatus1 & 0x04) { // Set once a packet is successfully sent (no TX abort).
+		//if ( (intStatus1 & 0x04) == 0x04 || (intStatus1 & 0x20) == 0x20) { // TX FIFO Almost Empty.
+			//switchMode(Ready | TuneMode);
 			return true;
-		} // endif
+		}
 		vTaskDelay(1);
 	} // end while
 
 	//timeout occurred.
 	ESP_LOGW(__FUNCTION__, "Timeout in Transit -- ");
-#if 0
-	switchMode(Ready);
-
-	if (ReadRegister(REG_DEV_STATUS) & 0x80) {
-		clearFIFO();
-	}
-#endif
-
 	hardReset(); // nop
 
 	return false;
@@ -292,7 +283,7 @@ void setChannel(byte channel) {
 }
 
 void switchMode(byte mode) {
-	ESP_LOGD(TAG,"switchMode mode=0x%x", mode);
+	ESP_LOGD(__FUNCTION__, "switchMode mode=0x%x", mode);
 	ChangeRegister(REG_STATE, mode);
 }
 
@@ -323,9 +314,9 @@ void setBaudRate(uint16_t kbps) {
 	byte modulationMode1 = _kbps < 30 ? 0x26 : 0x06; // Manchester Data Inversion is Enabled, Manchester Coding is Enabled
 	byte modulationMode2 = 0x23; // Modulation Source = FIFO Mode, Modulation Type=GFSK
 	byte modulationMode3 = round((freqDev * 1000.0) / 625.0);
-	ESP_LOGI(__FUNCTION__, "modulationMode1=0x%x",  modulationMode1);
-	ESP_LOGI(__FUNCTION__, "modulationMode2=0x%x",  modulationMode2);
-	ESP_LOGI(__FUNCTION__, "modulationMode3=0x%x",  modulationMode3);
+	ESP_LOGD(__FUNCTION__, "modulationMode1=0x%x",  modulationMode1);
+	ESP_LOGD(__FUNCTION__, "modulationMode2=0x%x",  modulationMode2);
+	ESP_LOGD(__FUNCTION__, "modulationMode3=0x%x",  modulationMode3);
 
 	//byte modulationVals[] = { modulationmode1, 0x23, round((freqDev * 1000.0) / 625.0) }; // msb of the kpbs to 3rd bit of register
 	byte modulationVals[] = { modulationMode1, modulationMode2, modulationMode3 }; // msb of the kpbs to 3rd bit of register
@@ -339,7 +330,7 @@ void setBaudRate(uint16_t kbps) {
 
 	//now set the timings
 	uint16_t minBandwidth = (2 * (uint32_t) freqDev) + kbps;
-	ESP_LOGD(TAG,"min Bandwidth value: 0x%x", minBandwidth);
+	ESP_LOGD(__FUNCTION__, "min Bandwidth value: 0x%x", minBandwidth);
 	byte IFValue = 0xff;
 	//since the table is ordered (from low to high), just find the 'minimum bandwidth which is greater than required'
 	for (byte i = 0; i < 8; ++i) {
@@ -348,7 +339,7 @@ void setBaudRate(uint16_t kbps) {
 			break;
 		}
 	}
-	ESP_LOGD(TAG,"Selected IF value: 0x%x", IFValue);
+	ESP_LOGD(__FUNCTION__, "Selected IF value: 0x%x", IFValue);
 
 	ChangeRegister(REG_IF_FILTER_BW, IFValue);
 
@@ -364,12 +355,12 @@ void setBaudRate(uint16_t kbps) {
 	if (crGain > 0x7FF) {
 		crGain = 0x7FF;
 	}
-	ESP_LOGD(TAG,"dwn3_bypass value: 0x%x", dwn3_bypass);
-	ESP_LOGD(TAG,"ndec_exp value: 0x%x", ndec_exp);
-	ESP_LOGD(TAG,"rxOversampling value: 0x%x", rxOversampling);
-	ESP_LOGD(TAG,"ncOffset value: 0x%"PRIu32, ncOffset);
-	ESP_LOGD(TAG,"crGain value: 0x%x", crGain);
-	ESP_LOGD(TAG,"crMultiplier value: 0x%x", crMultiplier);
+	ESP_LOGD(__FUNCTION__, "dwn3_bypass value: 0x%x", dwn3_bypass);
+	ESP_LOGD(__FUNCTION__, "ndec_exp value: 0x%x", ndec_exp);
+	ESP_LOGD(__FUNCTION__, "rxOversampling value: 0x%x", rxOversampling);
+	ESP_LOGD(__FUNCTION__, "ncOffset value: 0x%"PRIu32, ncOffset);
+	ESP_LOGD(__FUNCTION__, "crGain value: 0x%x", crGain);
+	ESP_LOGD(__FUNCTION__, "crMultiplier value: 0x%x", crMultiplier);
 
 	byte timingVals[] = { rxOversampling & 0x00FF, ((rxOversampling & 0x0700) >> 3) | ((ncOffset >> 16) & 0x0F),
 			(ncOffset >> 8) & 0xFF, ncOffset & 0xFF, ((crGain & 0x0700) >> 8) | crMultiplier, crGain & 0xFF };
@@ -392,7 +383,7 @@ void BurstWrite(Registers startReg, const byte value[], uint8_t length) {
 	spi_transfer(regVal);
 
 	for (byte i = 0; i < length; ++i) {
-		ESP_LOGD(TAG,"Writing: %x | %x", (regVal != 0xFF ? (regVal + i) & 0x7F : 0x7F), value[i]);
+		ESP_LOGD(__FUNCTION__, "Writing: %x | %x", (regVal != 0xFF ? (regVal + i) & 0x7F : 0x7F), value[i]);
 		spi_transfer(value[i]);
 	}
 
@@ -408,7 +399,7 @@ void BurstRead(Registers startReg, byte value[], uint8_t length) {
 
 	for (byte i = 0; i < length; ++i) {
 		value[i] = spi_transfer(0xFF);
-		ESP_LOGD(TAG,"Reading: %x | %x", (regVal != 0x7F ? (regVal + i) & 0x7F : 0x7F), value[i]);
+		ESP_LOGD(__FUNCTION__, "Reading: %x | %x", (regVal != 0x7F ? (regVal + i) & 0x7F : 0x7F), value[i]);
 	}
 
 	gpio_set_level(CONFIG_SEL_GPIO, 1);
@@ -421,7 +412,7 @@ void readAll() {
 	BurstRead(REG_DEV_TYPE, allValues, 0x7F);
 
 	for (byte i = 0; i < 0x7f; ++i) {
-		ESP_LOGI(TAG,"REG(%x) : %x", REG_DEV_TYPE + i, allValues[i]);
+		ESP_LOGI(TAG, "REG(%x) : %x", REG_DEV_TYPE + i, allValues[i]);
 	}
 
 }
@@ -494,32 +485,32 @@ bool isPacketReceived() {
 	}
 
 	// check for package received status interrupt register
-	byte intStat = ReadRegister(REG_INT_STATUS1);
-	ESP_LOGD(TAG,"isPacketReceived REG_INT_STATUS1=0x%x", intStat);
+	byte intStatus1 = ReadRegister(REG_INT_STATUS1);
+	ESP_LOGD(__FUNCTION__, "isPacketReceived REG_INT_STATUS1=0x%x", intStatus1);
 
 #ifdef DEBUG
-	byte intStat2 = ReadRegister(REG_INT_STATUS2);
+	byte intStatus2 = ReadRegister(REG_INT_STATUS2);
 
-	if (intStat2 & 0x40) { //interrupt occurred, check it && read the Interrupt Status1 register for 'preamble '
+	if (intStatus2 & 0x40) { //interrupt occurred, check it && read the Interrupt Status1 register for 'preamble '
 
-		ESP_LOGI(TAG,"HEY!! HEY!! Valid Preamble detected -- 0x%x", intStat2);
+		ESP_LOGI(TAG, "HEY!! HEY!! Valid Preamble detected -- 0x%x", intStatus2);
 
 	}
 
-	if (intStat2 & 0x80) { //interrupt occurred, check it && read the Interrupt Status1 register for 'preamble '
+	if (intStatus2 & 0x80) { //interrupt occurred, check it && read the Interrupt Status1 register for 'preamble '
 
-		ESP_LOGI(TAG,"HEY!! HEY!! SYNC WORD detected -- 0x%x", intStat2);
+		ESP_LOGI(TAG, "HEY!! HEY!! SYNC WORD detected -- 0x%x", intStatus2);
 
 	}
 #endif
 
-	if (intStat & 0x02) { //interrupt occurred, check it && read the Interrupt Status1 register for 'valid packet'
+	if (intStatus1 & 0x02) { //interrupt occurred, check it && read the Interrupt Status1 register for 'valid packet'
 		switchMode(Ready | TuneMode); // if packet came, get out of Rx mode till the packet is read out. Keep PLL on for fast reaction
-		ESP_LOGD(TAG,"Packet detected -- 0x%x", intStat);
+		ESP_LOGD(__FUNCTION__, "Packet detected -- 0x%x", intStatus1);
 		return true;
-	} else if (intStat & 0x01) { // packet crc error
+	} else if (intStatus1 & 0x01) { // packet crc error
 		switchMode(Ready); // get out of Rx mode till buffers are cleared
-		ESP_LOGW(__FUNCTION__, "CRC Error in Packet detected!-- 0x%x", intStat);
+		ESP_LOGW(__FUNCTION__, "CRC Error in Packet detected!-- 0x%x", intStatus1);
 		clearRxFIFO();
 		switchMode(RXMode | Ready); // get back to work
 		return false;
