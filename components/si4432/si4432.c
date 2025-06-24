@@ -193,26 +193,24 @@ void boot() {
 	/*
 	byte currentFix[] = { 0x80, 0x40, 0x7F };
 	BurstWrite(REG_CHARGEPUMP_OVERRIDE, currentFix, 3); // refer to AN440 for reasons
-
-	ChangeRegister(REG_GPIO0_CONF, 0x0F); // tx/rx data clk pin
-	ChangeRegister(REG_GPIO1_CONF, 0x00); // POR inverted pin
-	ChangeRegister(REG_GPIO2_CONF, 0x1C); // clear channel pin
 	*/
+
 	ChangeRegister(REG_AFC_TIMING_CONTROL, 0x02); // refer to AN440 for reasons
 	ChangeRegister(REG_AFC_LIMITER, 0xFF); // write max value - excel file did that.
 	ChangeRegister(REG_AGC_OVERRIDE, 0x60); // max gain control
 	ChangeRegister(REG_AFC_LOOP_GEARSHIFT_OVERRIDE, 0x3C); // turn off AFC
+
 	ChangeRegister(REG_DATAACCESS_CONTROL, 0xAD); // enable rx packet handling, enable tx packet handling, enable CRC, use CRC-IBM
 	ChangeRegister(REG_HEADER_CONTROL1, 0x0C); // no broadcast address control, enable check headers for bytes 3 & 2
-	ChangeRegister(REG_HEADER_CONTROL2, 0x22);	// enable headers byte 3 & 2, no fixed package length, sync word 3 & 2
+	ChangeRegister(REG_HEADER_CONTROL2, 0x22); // enable headers byte 3 & 2, no fixed package length, sync word 3 & 2
 	ChangeRegister(REG_PREAMBLE_LENGTH, 0x08); // 8 * 4 bits = 32 bits (4 bytes) preamble length
 	ChangeRegister(REG_PREAMBLE_DETECTION, 0x3A); // validate 7 * 4 bits of preamble	in a package
-	ChangeRegister(REG_SYNC_WORD3, 0x2D); // sync byte 3 val
-	ChangeRegister(REG_SYNC_WORD2, 0xD4); // sync byte 2 val
+	setCommsSignature(_packageSign); // default signature
 
-	ChangeRegister(REG_TX_POWER, 0x1F); // max power
-
-	ChangeRegister(REG_CHANNEL_STEPSIZE, 0x64); // each channel is of 1 Mhz interval
+	ChangeRegister(REG_SYNC_WORD3, 0x2D); // Set Synchronization Word 3
+	ChangeRegister(REG_SYNC_WORD2, 0xD4); // Set Synchronization Word 2
+	ChangeRegister(REG_TX_POWER, 0x03); // Set TX Power
+	ChangeRegister(REG_CHANNEL_STEPSIZE, 0x64); // Set Frequency Hopping Step Size
 
 	setFrequency(_freqCarrier); // default freq
 	setBaudRate(_kbps); // default baud rate is 100kpbs
@@ -225,15 +223,15 @@ void boot() {
 
 
 bool sendPacket(uint8_t length, const byte* data) {
+	if (length > 64) return false;
 
 	clearTxFIFO();
 	ChangeRegister(REG_PKG_LEN, length);
-
 	BurstWrite(REG_FIFO, data, length);
 
 	ChangeRegister(REG_INT_ENABLE1, 0x04); // set interrupts on for package sent
 	ChangeRegister(REG_INT_ENABLE2, 0x00); // set interrupts off for anything else
-	//read interrupt registers to clean them
+	// read interrupt registers to clean them
 	ReadRegister(REG_INT_STATUS1);
 	ReadRegister(REG_INT_STATUS2);
 
@@ -319,14 +317,21 @@ void setBaudRate(uint16_t kbps) {
 		return;
 	_kbps = kbps;
 
+	// set Modulation Mode Control 1/2/3
 	byte freqDev = kbps <= 10 ? 15 : 150;		// 15khz / 150 khz
-	//byte modulationValue = _kbps < 30 ? 0x4c : 0x0c;		// use FIFO Mode, GFSK, low baud mode on / off
-	byte modulationValue = _kbps < 30 ? 0x2c : 0x0c;		// use FIFO Mode, GFSK, low baud mode on / off
+	//byte modulationMode1 = _kbps < 30 ? 0x2c : 0x0c; // use FIFO Mode, GFSK, low baud mode on / off
+	byte modulationMode1 = _kbps < 30 ? 0x26 : 0x06; // Manchester Data Inversion is Enabled, Manchester Coding is Enabled
+	byte modulationMode2 = 0x23; // Modulation Source = FIFO Mode, Modulation Type=GFSK
+	byte modulationMode3 = round((freqDev * 1000.0) / 625.0);
+	ESP_LOGI(__FUNCTION__, "modulationMode1=0x%x",  modulationMode1);
+	ESP_LOGI(__FUNCTION__, "modulationMode2=0x%x",  modulationMode2);
+	ESP_LOGI(__FUNCTION__, "modulationMode3=0x%x",  modulationMode3);
 
-	byte modulationVals[] = { modulationValue, 0x23, round((freqDev * 1000.0) / 625.0) }; // msb of the kpbs to 3rd bit of register
+	//byte modulationVals[] = { modulationmode1, 0x23, round((freqDev * 1000.0) / 625.0) }; // msb of the kpbs to 3rd bit of register
+	byte modulationVals[] = { modulationMode1, modulationMode2, modulationMode3 }; // msb of the kpbs to 3rd bit of register
 	BurstWrite(REG_MODULATION_MODE1, modulationVals, 3); // 0x70
 
-	// set data rate
+	// set TX Data Rate 1
 	uint16_t bpsRegVal = round((kbps * (kbps < 30 ? 2097152 : 65536.0)) / 1000.0);
 	byte datarateVals[] = { bpsRegVal >> 8, bpsRegVal & 0xFF };
 
