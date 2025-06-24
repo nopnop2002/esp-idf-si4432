@@ -30,7 +30,7 @@ void setup() {
 void loop() {
   byte txBuf[64];
   byte txLen = sprintf((char *)txBuf, "Hello World %lu", millis());
-  Serial.println((char *)txBuf);
+  //Serial.println((char *)txBuf);
   bool sent = radio.sendPacket(txLen, txBuf);
   if (sent) {
     bool waiting = true;
@@ -81,6 +81,7 @@ void loop() {
       } // end if
 
       if ( (millis() - startMillis) > 1000) {
+        Serial.println((char *)txBuf);
         Serial.println("No responce within 1000 ms");
         waiting = false;
       }
