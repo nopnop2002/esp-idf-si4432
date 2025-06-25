@@ -43,8 +43,7 @@ You can use mosquitto_pub as Publisher.
 
 
 Communicate with Arduino Environment.   
-Run this sketch.   
-ArduinoCode\CC1101_receive   
+I tested it with [this](https://github.com/nopnop2002/esp-idf-si4432/tree/main/ArduinoCode/si4432_rx).   
 
 
 ### Radio to MQTT   
@@ -62,8 +61,7 @@ You can use mosquitto_sub as Subscriber.
 
 
 Communicate with Arduino Environment.   
-Run this sketch.   
-ArduinoCode\CC1101_transmitte   
+I tested it with [this](https://github.com/nopnop2002/esp-idf-si4432/tree/main/ArduinoCode/si4432_tx).   
 
 ## Broker Setting
 Set the information of your MQTT broker.   
