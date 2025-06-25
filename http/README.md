@@ -44,9 +44,7 @@ You can use curl as HTTP Client.
 ![Image](https://github.com/user-attachments/assets/be869b5e-4a8e-4310-bc93-ae7c24188351)
 
 Communicate with Arduino Environment.   
-Run this sketch.   
-ArduinoCode\CC1101_receive   
-
+I tested it with [this](https://github.com/nopnop2002/esp-idf-si4432/tree/main/ArduinoCode/si4432_rx).   
 
 ### Radio to HTTP
 Receive from Radio and send to HTTP.   
@@ -66,9 +64,7 @@ You can use nc(netcat) as HTTP Server.
 
 
 Communicate with Arduino Environment.   
-Run this sketch.   
-ArduinoCode\CC1101_transmitte   
-
+I tested it with [this](https://github.com/nopnop2002/esp-idf-si4432/tree/main/ArduinoCode/si4432_tx).   
 
 ### Specifying an HTTP Server   
 You can specify your HTTP Server in one of the following ways:   
