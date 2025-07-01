@@ -123,11 +123,10 @@ void ws_client(void *pvParameters)
 	esp_websocket_client_config_t websocket_cfg = {};
 	websocket_cfg.uri = url;
 	websocket_cfg.user_context=&socketBuf;
-#if (ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0))
 	websocket_cfg.reconnect_timeout_ms = 10000;
 	websocket_cfg.network_timeout_ms = 10000;
 	websocket_cfg.ping_interval_sec = 60;
-#endif
+	websocket_cfg.task_prio = uxTaskPriorityGet(NULL) + 1;
 
 	ESP_LOGI(TAG, "Connecting to %s...", websocket_cfg.uri);
 	esp_websocket_client_handle_t client = esp_websocket_client_init(&websocket_cfg);
@@ -173,7 +172,7 @@ void ws_client(void *pvParameters)
 				uint32_t event_id = ulTaskNotifyTake( pdTRUE, 100 );
 				ESP_LOGI(TAG, "ulTaskNotifyTake=0x%"PRIx32, event_id);
 				if (event_id != WEBSOCKET_EVENT_DATA) {
-					ESP_LOGW(TAG, "No response from server");
+					ESP_LOGE(TAG, "No response from server");
 					break;
 				}
 			} else {
