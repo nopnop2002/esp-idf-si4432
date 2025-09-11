@@ -1,7 +1,7 @@
 # Example of Arduino environment   
 I use [this](https://github.com/nopnop2002/Arduino-si4432).   
 
-# Wirering
+# Wiring
 
 |SI4432||ATmega328|ATmega2560|ESP8266|
 |:-:|:-:|:-:|:-:|:-:|

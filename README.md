@@ -52,7 +52,7 @@ It was called HSPI_HOST / VSPI_HOST, but it is not defined in SoCs other than ES
 
 The frequency and channel used by the sender and receiver must match.   
 
-# Wirering
+# Wiring
 
 |SI4432||ESP32|ESP32-S2/S3|ESP32-C2/C3/C6|
 |:-:|:-:|:-:|:-:|:-:|
