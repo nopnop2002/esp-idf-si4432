@@ -21,7 +21,6 @@ ESP-IDF V4.4 release branch reached EOL in July 2024.
 ```Shell
 git clone https://github.com/nopnop2002/esp-idf-si4432
 cd esp-idf-si4432/basic
-idf.py set-target {esp32/esp32s2/esp32s3/esp32c2/esp32c3/esp32c6}
 idf.py menuconfig
 idf.py flash
 ```
@@ -54,7 +53,7 @@ The frequency and channel used by the sender and receiver must match.
 
 # Wiring
 
-|SI4432||ESP32|ESP32-S2/S3|ESP32-C2/C3/C6|
+|SI4432||ESP32|ESP32-S2/S3|ESP32-Cx/Hx|
 |:-:|:-:|:-:|:-:|:-:|
 |MISO|--|GPIO19|GPIO37|GPIO4|
 |SCK|--|GPIO18|GPIO36|GPIO3|
