@@ -1,4 +1,4 @@
-/* The example of ESP-IDF
+/* The example of SI4432
  *
  * This sample code is in the public domain.
  */
