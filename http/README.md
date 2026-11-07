@@ -24,7 +24,7 @@ This is si4432 and HTTP gateway application.
 Set the information of your access point.   
 ![Image](https://github.com/user-attachments/assets/5c0f3850-8699-414f-a130-df088db4e87c)
 
-## Radioi Setting
+## Radio Setting
 Set the wireless communication direction.   
 
 ### HTTP to Radio

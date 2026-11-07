@@ -24,7 +24,7 @@ This is si4432 and MQTT gateway application.
 Set the information of your access point.   
 ![Image](https://github.com/user-attachments/assets/44cab988-c869-431b-93bc-7ab4de2550c2)
 
-## Radioi Setting
+## Radio Setting
 Set the wireless communication direction.   
 ![Image](https://github.com/user-attachments/assets/748d0902-1447-488d-9969-7278f463fdaa)
 

@@ -24,7 +24,7 @@ This is si4432 and WebSocket gateway application.
 Set the information of your access point.   
 ![Image](https://github.com/user-attachments/assets/5dfc6cd4-80fb-4ad2-8fe8-4ac5cd31b004)
 
-## Radioi Setting
+## Radio Setting
 Set the wireless communication direction.   
 
 ### WS to Radio
